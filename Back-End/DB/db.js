@@ -9,7 +9,7 @@ const mysql = require('mysql');
 const connection = mysql.createPool({
   host: "127.0.0.1", // 호스트
   user: "root",      // 데이터베이스 계정
-  password: "beomseon3593!@",   // 데이터베이스 비밀번호
+  password: "0000",  // 데이터베이스 비밀번호
   database: "DB",    // 사용할 데이터베이스
 });
 
@@ -163,10 +163,10 @@ async function saveReservationToDatabase(Reservation) {
     const weekday = dateStr.toLocaleString('ko-KR', options); // 선택된 날짜의 요일 계산
 
     // MySQL에 데이터 삽입하는 쿼리
-    const query = 'INSERT INTO DB.Reservation (id, room_id, date, reason, event_name, people, group_name, event_content, user_id, appproval, start_time, end_time, weekday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO DB.Reservation (id, room_id, date, reason, event_name, people, group_name, event_content, user_id, approval, start_time, end_time, weekday) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
     // 쿼리 실행
-    await connection.query(query, [Reservation.id, Reservation.room_id, Reservation.date, Reservation.reason, Reservation.event_name, Reservation.people, Reservation.group_name, Reservation.event_content, Reservation.user_id, Reservation.appproval, Reservation.start_time, Reservation.end_time, weekday]);
+    await connection.query(query, [Reservation.id, Reservation.room_id, Reservation.date, Reservation.reason, Reservation.event_name, Reservation.people, Reservation.group_name, Reservation.event_content, Reservation.user_id, Reservation.approval, Reservation.start_time, Reservation.end_time, weekday]);
     console.log('데이터가 MySQL 데이터베이스에 저장되었습니다.');
   } catch (error) {
     console.error('데이터 저장 오류:', error);
@@ -195,10 +195,10 @@ async function updateApprovalToDatabase(Reservation) {
 async function saveUserToDatabase(user) {
   try {
     // MySQL에 데이터 삽입하는 쿼리
-    const query = 'INSERT INTO DB.User (id, password, name, phone, type) VALUES (?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO DB.User (id, password, name, phone, type, email) VALUES (?, ?, ?, ?, ?, ?)';
 
     // 쿼리 실행
-    await connection.query(query, [user.id, user.password, user.name, user.phone, user.type]);
+    await connection.query(query, [user.id, user.password, user.name, user.phone, user.type, user.email]);
     console.log('데이터가 MySQL 데이터베이스에 저장되었습니다.');
   } catch (error) {
     console.error('데이터 저장 오류:', error);
