@@ -1,13 +1,17 @@
 # 동국대학교 대관 신청 웹 시스템
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/iSSFEBImFPA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+[![웹페이지 이미지](./Documents/pages/web_3.png)](https://youtu.be/iSSFEBImFPA)
+
 
 <br>
 
 ## Developed by CSID-DGU: 5-Prodigy_Project
 ### React 기반의 동국대학교 대관신청 웹 시스템
-<br>
 
+[시연 영상 링크 ](https://www.youtube.com/watch?v=iSSFEBImFPA)
+
+<br>
 
 <img alt="MIT" src ="https://img.shields.io/badge/license-MIT-salmon"> <img alt="" src ="https://img.shields.io/badge/OS-ubuntu-coral"> <img alt="" src ="https://img.shields.io/badge/IDE-VSCode-indianred"><br>
 
