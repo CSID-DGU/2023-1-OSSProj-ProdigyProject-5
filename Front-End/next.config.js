@@ -19,13 +19,14 @@ const cacheFontsHeaders = () => {
 module.exports = {
   trailingSlash: false,
   reactStrictMode: true,
+  distDir: 'build',
   //swcMinify: true,
-  experimental: {
-    turboMode: true,
-    eslint: true,
-    //concurrentFeatures: true,
-    //serverComponents: true,
-  },
+  // experimental: {
+  //   turboMode: true,
+  //   eslint: true,
+  //   //concurrentFeatures: true,
+  //   //serverComponents: true,
+  // },
   babel: {
     presets: ['next/babel'],
   },
@@ -39,14 +40,14 @@ module.exports = {
     ],
   },
   i18n: {
-    locales: ["en-US"],
-    defaultLocale: "en-US",
-  },
+    locales: ["ko-KR"],
+    defaultLocale: "ko-KR",
+  },  
   async redirects() {
     return [
       {
         source: "/login",
-        destination: "/signin",
+        destination: "/",
         permanent: false,
       },
     ]
@@ -60,7 +61,7 @@ module.exports = {
       ...cacheFontsHeaders(),
     ]
   },
-  ebpack: (config) => {
+  webpack: (config) => {
     config.resolve.fallback = { fs: false, module: false }
     return config
   },

@@ -7,14 +7,19 @@ import { Transition } from "../primitives"
 import { Popover } from "@headlessui/react"
 import Router, { useRouter } from "next/router"
 import { Header, Img, Button, ThemeChanger, Footer, Logo } from "../components"
-import { HiLightningBolt, HiCog, HiUser } from "react-icons/hi"
+import { HiLightningBolt, HiCog, HiUser, HiLogout } from "react-icons/hi"
+import api from "../utils/api"
 
-const dropDownOptions = [
+const dropDownOptions = [ //유저 아이콘 메뉴
   {
-    name: "Profile",
+    name: "마이페이지",
     href: "/mypage",
     icon: HiUser,
   },
+  {
+    name: "로그아웃",
+    icon: HiLogout,
+  }
 ]
 
 export const UserUIContainer = ({
@@ -60,9 +65,30 @@ export const UserUIContainer = ({
   )
 }
 
-export const UserDropDown = () => {
-  const [open, setOpen] = useState(false)
+const logout = async () => { //로그아웃 요청
+  try {
+    const response = await api.post("/logout");
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
+export const UserDropDown = () => { //유저 메뉴 
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const handleLogout = () => { //로그아웃이 성공하면 로그인 페이지로 돌아감
+    logout()
+    .then(response => {
+      if(response.status === 200) {
+        router.push("/");
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    })
+    
+  }
   return (
     <Popover tw="relative [min-width:40px]">
       {({ open }) => (
@@ -82,10 +108,24 @@ export const UserDropDown = () => {
                     overflow-hidden rounded-brand shadow-2xl border ring-neutral-3 ring-opacity-5
                     sm:(text-sm py-3 font-medium tracking-wide)"
               >
-                {dropDownOptions.map((option) => (
+                  {dropDownOptions.map((option) => (
                   <div key={option.name}>
-                    <Link href={option.href} passHref>
-                      <a
+                    {option.href ? ( //dropDownOptions에 href가 포함되어 있는 지 아닌 지에 따라 Link를 넣거나 버튼을 넣거나 함
+                      <Link href={option.href} passHref>
+                        <div
+                          tw="inline-flex items-center w-full p-2 transition duration-150
+                            ease-in-out rounded-brand 
+                            hocus:(bg-neutral-8 text-neutral-1 outline-none)"
+                        >
+                          <span tw="mr-2">
+                            <option.icon width={18} />
+                          </span>
+                          {option.name}
+                        </div>
+                      </Link>
+                    ) : ( //버튼은 로그아웃을 수행하는 버튼
+                      <button
+                        onClick={handleLogout}
                         tw="inline-flex items-center w-full p-2 transition duration-150
                           ease-in-out rounded-brand 
                           hocus:(bg-neutral-8 text-neutral-1 outline-none)"
@@ -94,8 +134,8 @@ export const UserDropDown = () => {
                           <option.icon width={18} />
                         </span>
                         {option.name}
-                      </a>
-                    </Link>
+                      </button>
+                    )}
                     <hr tw="opacity-80 my-1" />
                   </div>
                 ))}

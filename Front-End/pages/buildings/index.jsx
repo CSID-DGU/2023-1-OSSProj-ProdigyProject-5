@@ -1,40 +1,41 @@
-import { useEffect, useState } from "react"
-import tw from "twin.macro"
-import Link from "next/link"
+import { use, useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { Img, Button, Datepicker } from "../../components"
-import { UserUIContainer } from "../../layouts/UserUIContainer"
-import { buildings, nameToSlug } from "../../utils/buildings"
+import tw from "twin.macro"
+import styled from "@emotion/styled"
+import Link from "next/link"
 import { useSelector } from "react-redux"
+import { Img, Button, Datepicker} from "../../components"
+import { UserUIContainer } from "../../layouts/UserUIContainer"
 import api from "../../utils/api"
 
-
-
-
-const BuildingCard = ({ building}) => {
-
+//건물의 이름과 사진을 나타낼 반복되는 건물카드 컴포넌트
+const BuildingCard = ({ building, date}) => {
+  const router = useRouter();
   const { name, image } = building
-  const slug = nameToSlug(name)
-  
-  return (
-    <Link href={`/buildings/${slug}`} passHref>
-      <a tw="w-full p-2 text-left rounded transition ease-in-out hover:(bg-neutral-1)">
-        <span tw="block px-2 py-2 my-6 font-semibold capitalize bg-neutral-1 rounded-lg text-lg ">
-          {name}
-        </span>
-        <div tw="relative h-40 rounded-lg">
-          <Img objectFit={"cover"} tw="rounded-lg" layout={"fill"} src={image} alt={name} />
-        </div>
-      </a>
+  const slug = name
+
+
+  return ( //해당 카드를 선택하면 query를 통해 datePicker에서 선택한 날짜를 보내주고 선택한 건물에 맞는 페이지로 이동
+    <Link href={{pathname: `/buildings/${slug}`, query: {date : date}}} as={`/buildings/${slug}`} passHref>
+      <div tw="hover:bg-neutral-1 w-full p-2 text-left rounded transition ease-in-out">
+          <span tw="block px-2 py-2 my-6 font-semibold capitalize bg-neutral-1 rounded-lg text-lg  ">
+            {name}
+          </span>
+          <div tw="relative h-40 rounded-lg">
+            <Img objectFit={"cover"} tw="rounded-lg" layout={"fill"} src={image} alt={name} />
+          </div>
+      </div>
     </Link>
   )
 }
 
+//건물의 사진과 이름으로 나타나는 건물 페이지. 캠퍼스맵페이지와 서로 왔다갔다함
 export default function Buildings({ allBuildings }) {
   const router = useRouter()
   const selectedDate = useSelector((state) => state.selectedDate);
-  const date = new Date(selectedDate);
-  console.log(date);
+  const date = new Date(selectedDate); //리덕스에 저장되어 있는 날짜 Date로 반환
+  const stringDate = date.toISOString().slice(0, 10); //YYYY-MM-DD형태로 나타남
+
   return (
     <UserUIContainer title="Buildings" headerBorder footer>
       <main tw="h-full">
@@ -59,11 +60,11 @@ export default function Buildings({ allBuildings }) {
             </div>
             <div
               tw="relative px-5 py-10
-                  grid gap-4 grid-cols-2 sm:(grid-cols-3) lg:(grid-cols-4)
+                  grid gap-4 grid-cols-1 sm:(grid-cols-3) lg:(grid-cols-4)
                   "
             >
               {allBuildings?.map((building) => (
-                <BuildingCard building={building} date={date} key={building.name} />
+                <BuildingCard building={building} date={stringDate} key={building.name} />
               ))}
             </div>
         </section>
@@ -72,7 +73,7 @@ export default function Buildings({ allBuildings }) {
   )
 }
 
-// 백엔드에서 보내주는 data buildings가 [{name: "name", img: "img"}, ...] 형태로 보내줄 것이라 가정
+// 백엔드에서 대관이 가능한 건물들을 [{name: "name", image: "img"}, ...] 형태로 보내줄 것
 //만약 객체 형태로 올 경우 {{}, {}, ...} => Object.values(buildings)로 배열로 바꿔줘야 함
 export async function getServerSideProps() {
   try {
